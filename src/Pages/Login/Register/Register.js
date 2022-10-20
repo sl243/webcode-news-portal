@@ -1,11 +1,14 @@
 import React, { useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthProvider/AuthProvider';
 
 const Register = () => {
-    const {Register} = useContext(AuthContext)
-    const [error, setError] = useState()
+    const { Register, userProfileUpdate, userEmailVerity } = useContext(AuthContext);
+    const [error, setError] = useState();
+    const [accepted, setAccepted] = useState();
 
     const handleSignInSubmit = (event) => {
 
@@ -19,16 +22,43 @@ const Register = () => {
         console.log(name)
 
         Register(email, password)
-        .then( result => {
-            const user = result.user;
-            console.log(user)
-            setError('')
-            form.reset()
-        })
-        .catch(error => {
-            console.error(error)
-            setError(error.message)
-        })
+            .then(result => {
+                const user = result.user;
+                console.log(user)
+                setError('')
+                form.reset()
+                handleUserProfileUpdate(name, photoURL)
+                handleUserEmailVerification()
+                toast.success('Please Verity Your Email Address')
+            })
+            .catch(error => {
+                console.error(error)
+                setError(error.message)
+            })
+    }
+
+    // Check box handler Accept Terms and conditions
+    const handleAccepted = (event) => {
+        setAccepted(event.target.checked)
+    }
+
+    // user profile update
+    const handleUserProfileUpdate = (name, photoURL) => {
+        const profile = {
+            displayName: name,
+            photoURL: photoURL,
+        }
+        userProfileUpdate(profile)
+        .then( () =>{})
+        .catch(e => console.error(e))
+    }
+
+
+    // user email verification 
+    const handleUserEmailVerification = () => {
+        userEmailVerity()
+        .then( () => {})
+        .catch(error => console.log(error))
     }
 
     return (
@@ -39,7 +69,7 @@ const Register = () => {
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email Address</Form.Label>
-                <Form.Control name='email' type="email" placeholder="Enter Your Email Address" required/>
+                <Form.Control name='email' type="email" placeholder="Enter Your Email Address" required />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
@@ -47,9 +77,16 @@ const Register = () => {
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Photo URL</Form.Label>
-                <Form.Control name='photoURL' type="text" placeholder="Enter Your Photo URL" />
+                <Form.Control name='photoURL' type="photoURL" placeholder="Enter Your Photo URL" />
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                <Form.Check
+                    onClick={handleAccepted}
+                    type="checkbox"
+                    label={<>Accept <Link to='/terms'>Terms and Condition</Link></>}
+                />
+            </Form.Group>
+            <Button variant="primary" type="submit" disabled={!accepted}>
                 Register
             </Button>
             <Form.Text className="text-muted">
