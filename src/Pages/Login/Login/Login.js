@@ -7,7 +7,7 @@ import { AuthContext } from '../../../contexts/AuthProvider/AuthProvider';
 
 const Login = () => {
     const [error, setError] = useState('')
-    const {LogIn} = useContext(AuthContext);
+    const { LogIn, setLoading } = useContext(AuthContext);
     const navigate = useNavigate()
 
     const location = useLocation();
@@ -22,32 +22,35 @@ const Login = () => {
         console.log(email, password)
 
         LogIn(email, password)
-        .then( result => {
-            const user = result.user;
-            console.log(user)
-            form.reset()
-            setError('')
-            if(user.emailVerified){
-                navigate(from, {replace: true})
-            }
-            else{
-                toast.error('Your Email Not Verified, Please Verity Email Address')
-            }
-        })
-        .catch(errer => {
-            console.log(errer)
-            setError(errer.message);
-        })
+            .then(result => {
+                const user = result.user;
+                console.log(user)
+                form.reset()
+                setError('')
+                if (user.emailVerified) {
+                    navigate(from, { replace: true })
+                }
+                else {
+                    toast.error('Your Email Not Verified, Please Verity Email Address')
+                }
+            })
+            .catch(errer => {
+                console.log(errer)
+                setError(errer.message);
+            })
+            .finally(() =>{
+                setLoading(false)
+            })
     }
     return (
         <Form onSubmit={handleLogIn}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email Address</Form.Label>
-                <Form.Control name='email' type="email" placeholder="Your Email Address" required/>
+                <Form.Control name='email' type="email" placeholder="Your Email Address" required />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
-                <Form.Control name='password' type="password" placeholder="Password" required/>
+                <Form.Control name='password' type="password" placeholder="Password" required />
             </Form.Group>
             <Button variant="primary" type="submit">
                 Login

@@ -47,7 +47,9 @@ const AuthProvider = ({ children }) => {
     // manage user
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
+            if(currentUser === null || currentUser.emailVerified){
+                setUser(currentUser)
+            }
             setLoading(false)
         })
         return () => {
@@ -63,7 +65,8 @@ const AuthProvider = ({ children }) => {
         Register, 
         LogIn,
         userProfileUpdate,
-        userEmailVerity, 
+        userEmailVerity,
+        setLoading, 
     }
 
 
