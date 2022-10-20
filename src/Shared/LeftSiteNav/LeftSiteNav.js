@@ -9,6 +9,7 @@ const LeftSiteNav = () => {
         .then(res => res.json())
         .then(data => setCategories(data))
     },[])
+    
     return (
         <div>
             <h4>All Categories: {categories.length}</h4>
