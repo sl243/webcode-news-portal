@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Image } from 'react-bootstrap';
+import { Button, Image } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -52,14 +52,14 @@ const Header = () => {
                                 </>
                                 : 
                                 <>
-                                    <Link to='/login'>Login</Link>
+                                    <Link to='/login'><Button variant="outline-secondary">Login</Button></Link>
                                     <Link to='/register'>Register</Link>
                                 </>
 
                             }
                             
                         </Nav.Link>
-                        <Nav.Link eventKey={2} href="#memes">
+                        <Link to='/profile'>
                             {
                                 user?.photoURL ?
                                 <Image
@@ -69,7 +69,7 @@ const Header = () => {
                                 ></Image>
                                 : <FaUser></FaUser>
                             }
-                        </Nav.Link>
+                        </Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
